@@ -1,17 +1,24 @@
 package main
 
-import "fmt"
+import (
+	"context"
+	"fmt"
+)
 
 func main() {
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
 
-	fmt.Println("jaber")
+	config.Load() // ⭐ এই লাইনটাই সবচেয়ে দরকার
+
+	app := setupFiberApp()
+	db := setupDatabase()
+	defer closeDatabase(db)
+	setupRoutes(app, db)
+
+	address := fmt.Sprintf("%s:%d", config.AppHost, config.AppPort)
+
+	serverErrors := make(chan error, 1)
+	go startServer(app, address, serverErrors)
+	handleGracefulShutdown(ctx, app, serverErrors)
 }
-
-/*src/
-├─ main.go
-├─ config/
-├─ controller/
-├─ router/
-├─ service/
-├─ model/
-├─ database/*/
