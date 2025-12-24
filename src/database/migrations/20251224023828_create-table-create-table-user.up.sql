@@ -1,0 +1,17 @@
+CREATE TABLE users (
+    id BIGSERIAL PRIMARY KEY,
+
+    name VARCHAR(100) NOT NULL,
+    email VARCHAR(150) NOT NULL UNIQUE,
+
+    password TEXT NOT NULL,
+
+    role VARCHAR(20) NOT NULL DEFAULT 'user',
+    status BOOLEAN NOT NULL DEFAULT TRUE,
+
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+-- index for faster login lookup
+CREATE INDEX idx_users_email ON users(email);
