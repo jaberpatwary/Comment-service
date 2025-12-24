@@ -8,18 +8,26 @@ import (
 
 // App configuration
 var (
+	// app
 	IsDev   bool
 	AppEnv  string
 	AppHost string
 	AppPort int
 	AppURL  string
 
-	// Database configuration
+	// database
 	DBHost     string
 	DBUser     string
 	DBPassword string
 	DBName     string
 	DBPort     int
+
+	// jwt ✅ (THIS WAS MISSING)
+	JWTSecret           string
+	JWTAccessExp        int // minutes
+	JWTRefreshExp       int // days
+	JWTResetPasswordExp int // minutes
+	JWTVerifyEmailExp   int // minutes
 )
 
 func init() {
@@ -39,12 +47,22 @@ func init() {
 	DBName = viper.GetString("DB_NAME")
 	DBPort = viper.GetInt("DB_PORT")
 
+	// jwt config ✅
+	JWTSecret = viper.GetString("JWT_SECRET")
+	JWTAccessExp = viper.GetInt("JWT_ACCESS_EXP_MINUTES")
+	JWTRefreshExp = viper.GetInt("JWT_REFRESH_EXP_DAYS")
+	JWTResetPasswordExp = viper.GetInt("JWT_RESET_PASSWORD_EXP_MINUTES")
+	JWTVerifyEmailExp = viper.GetInt("JWT_VERIFY_EMAIL_EXP_MINUTES")
+
 	// basic validation
 	if AppPort == 0 {
 		log.Fatal("❌ APP_PORT missing")
 	}
 	if DBHost == "" || DBUser == "" || DBName == "" {
 		log.Fatal("❌ Database configuration missing")
+	}
+	if JWTSecret == "" {
+		log.Fatal("❌ JWT_SECRET missing")
 	}
 
 	log.Println("✅ Configuration initialized")

@@ -12,6 +12,7 @@ func UserRoutes(v1 fiber.Router, u service.UserService) {
 	userController := controller.NewUserController(u)
 	// Define user-related routes
 	userGroup := v1.Group("/users")
+	comGroup.Use(middleware.JwtConfig()) //jwt router
 	userGroup.Post("/", userController.CreateUser)
 
 }
