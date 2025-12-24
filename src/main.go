@@ -5,6 +5,7 @@ import (
 
 	"comment/src/config"
 	"comment/src/database"
+	"comment/src/router"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -13,13 +14,13 @@ func main() {
 	// 1️⃣ ENV check
 	fmt.Println("ENV:", config.AppEnv)
 
-	// 2️⃣ Database connection (আগে)
+	// 2️⃣ Database connection
 	db := database.Connect(config.DBHost, config.DBName)
 	if db != nil {
 		fmt.Println("✅ DB connected")
 	}
 
-	// 3️⃣ Fiber setup (main-এর ভেতরেই)
+	// 3️⃣ Fiber setup
 	app := fiber.New()
 
 	// 4️⃣ Test route
@@ -27,7 +28,10 @@ func main() {
 		return c.SendString("Fiber is running 🚀")
 	})
 
-	// 5️⃣ Server start
+	// 🔥🔥🔥 5️⃣ ROUTES REGISTER (THIS WAS MISSING)
+	router.Routes(app, db)
+
+	// 6️⃣ Server start
 	address := fmt.Sprintf("%s:%d", config.AppHost, config.AppPort)
 	fmt.Println("🚀 Server running on", address)
 
